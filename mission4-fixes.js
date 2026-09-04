@@ -38,13 +38,14 @@ ENTRY_POS.y=78.6;
 
 /*
  * Conexiones exactas del esquema. No se crean conexiones por cercanía.
+ * Corrección: B8 sí conecta directamente con A3.
  */
 Object.keys(GRAPH).forEach(key=>delete GRAPH[key]);
 Object.assign(GRAPH,{
   ENTRADA:["B6"],
 
   A1:["A3"],
-  A3:["A1"],
+  A3:["A1","B8"],
 
   B3:["A2","B1"],
   A2:["B3"],
@@ -54,7 +55,7 @@ Object.assign(GRAPH,{
 
   B1:["B3","A5","A7"],
   A5:["B1","B8"],
-  B8:["A5","A6","A9"],
+  B8:["A5","A6","A9","A3"],
   A6:["B8","B2"],
   B2:["A6","B4","A8"],
 
@@ -148,6 +149,50 @@ if(b7){
 /* Rehacer el sorteo B con las definiciones ya corregidas. */
 randomizeBRooms();
 
-/* Precarga del icono nuevo. */
-const nurseIconPreload=new Image();
-nurseIconPreload.src="ICOEMF.png";
+/* =========================================================
+   Iconos reales para escáner y habitaciones completadas
+   ========================================================= */
+
+const originalMarkerAt=markerAt;
+markerAt=function(id,pos,className,text=""){
+  const isCheck=className.includes("check-marker");
+  const isScan=className.includes("scan-marker");
+
+  if(!isCheck&&!isScan){
+    return originalMarkerAt(id,pos,className,text);
+  }
+
+  removeMarker(id);
+  const image=document.createElement("img");
+  image.id=id;
+  image.draggable=false;
+  image.style.left=`${pos.x}%`;
+  image.style.top=`${pos.y}%`;
+  image.style.position="absolute";
+  image.style.transform="translate(-50%,-50%)";
+  image.style.pointerEvents="none";
+  image.style.objectFit="contain";
+  image.style.zIndex="35";
+
+  if(isCheck){
+    image.src="icocheck.png";
+    image.className="map-icon check-image";
+    image.style.width="8.1%";
+    image.style.filter="drop-shadow(0 0 7px rgba(168,211,54,.55))";
+  }else{
+    const direction=(className.match(/dir-(up|right|left|down)/)||[])[1]||"up";
+    image.src="Esc1.png";
+    image.className=`map-icon scan-image dir-${direction}`;
+    image.style.width="8.8%";
+    image.style.filter="drop-shadow(0 0 8px rgba(168,211,54,.78))";
+  }
+
+  iconsLayer.appendChild(image);
+  return image;
+};
+
+/* Precarga de iconos añadidos. */
+["ICOEMF.png","icocheck.png","Esc1.png"].forEach(src=>{
+  const image=new Image();
+  image.src=src;
+});
