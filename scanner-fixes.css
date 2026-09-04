@@ -1,0 +1,39 @@
+/* Iconos reales del mapa */
+.check-image,.scan-image{
+  position:absolute;
+  left:0;
+  top:0;
+  transform:translate(-50%,-50%);
+  transform-origin:50% 50%;
+  pointer-events:none;
+  object-fit:contain;
+  z-index:35;
+}
+
+.check-image{
+  width:8.1%;
+  filter:drop-shadow(0 0 7px rgba(168,211,54,.55));
+  animation:pop .25s ease-out;
+}
+
+.scan-image{
+  width:8.8%;
+  filter:drop-shadow(0 0 8px rgba(168,211,54,.78));
+  animation:scannerBlink .82s infinite ease-in-out;
+}
+
+.scan-image.dir-up{transform:translate(-50%,-50%) rotate(0deg)}
+.scan-image.dir-right{transform:translate(-50%,-50%) rotate(90deg)}
+.scan-image.dir-down{transform:translate(-50%,-50%) rotate(180deg)}
+.scan-image.dir-left{transform:translate(-50%,-50%) rotate(-90deg)}
+
+@keyframes scannerBlink{
+  0%,100%{
+    opacity:.28;
+    filter:brightness(.9) drop-shadow(0 0 5px rgba(168,211,54,.45));
+  }
+  50%{
+    opacity:1;
+    filter:brightness(1.35) drop-shadow(0 0 13px rgba(168,211,54,.95));
+  }
+}
