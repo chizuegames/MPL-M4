@@ -12,44 +12,27 @@ function a1Unlocked(){
   return requirementsMet(definitionFor("A1"));
 }
 
-function removeMissionCompleteBanner(){
-  const banner=document.getElementById("missionCompleteBanner");
-  if(banner)banner.remove();
-}
+function showMissionCompleteScreen(){
+  if(state.ended)return;
 
-function showMissionCompleteBanner(){
-  removeMissionCompleteBanner();
+  state.ended=true;
+  state.gameLocked=true;
+  turnOffScanner();
 
-  const banner=document.createElement("div");
-  banner.id="missionCompleteBanner";
-  banner.textContent="MISIÓN CUMPLIDA";
-  banner.style.position="absolute";
-  banner.style.left="50%";
-  banner.style.top="8%";
-  banner.style.transform="translateX(-50%) scale(.88)";
-  banner.style.zIndex="180";
-  banner.style.minWidth="64%";
-  banner.style.padding="14px 22px";
-  banner.style.border="3px solid #d9ff74";
-  banner.style.borderRadius="18px";
-  banner.style.background="rgba(12,26,20,.94)";
-  banner.style.color="#f4ffcc";
-  banner.style.fontSize="clamp(22px,5vw,38px)";
-  banner.style.fontWeight="1000";
-  banner.style.letterSpacing="1.4px";
-  banner.style.textAlign="center";
-  banner.style.textShadow="0 2px 3px #000";
-  banner.style.boxShadow="0 0 28px rgba(168,211,54,.75)";
-  banner.style.pointerEvents="none";
-  banner.style.opacity="0";
-  banner.style.transition="opacity .28s ease, transform .28s ease";
+  /* A1 queda completada al culminar la misión. */
+  state.rooms.A1.completed=true;
+  state.rooms.A1.revealed=true;
 
-  encounterCard.appendChild(banner);
+  /* Oscurecer toda la pantalla y mostrar el cierre. */
+  endOverlay.className="show missioncomplete";
+  endTitle.textContent="MISIÓN CUMPLIDA";
+  endSubtitle.textContent="¡BIEN HECHO, ORION! HAS COMPLETADO LA MISIÓN.";
 
-  requestAnimationFrame(()=>{
-    banner.style.opacity="1";
-    banner.style.transform="translateX(-50%) scale(1)";
-  });
+  /* Pequeño tono de confirmación, usando el sistema de audio existente. */
+  try{
+    toneSweep(520,880,.35,.09,"sine");
+    setTimeout(()=>toneSweep(680,1080,.42,.08,"sine"),180);
+  }catch(error){}
 }
 
 /*
@@ -75,7 +58,6 @@ handleRoomClick=function(room){
   if(!a1Unlocked()){
     turnOffScanner();
     resetEncounterUI();
-    removeMissionCompleteBanner();
     state.pendingRoom=null;
     state.encounterMode="a1Locked";
     setEncounterImage(definitionFor("A1").card);
@@ -91,12 +73,12 @@ handleRoomClick=function(room){
 
 /*
  * Cuando A1 ya está desbloqueada y la lógica general abre el encuentro,
- * saltamos directamente a A1F y mostramos el aviso de misión cumplida.
+ * saltamos directamente a A1F. A1F se deja visible brevemente y luego
+ * aparece el cierre oscuro de MISIÓN CUMPLIDA.
  */
 const openEncounterBeforeA1Fix=openEncounter;
 openEncounter=function(room){
   if(room!=="A1"){
-    removeMissionCompleteBanner();
     return openEncounterBeforeA1Fix(room);
   }
 
@@ -105,7 +87,6 @@ openEncounter=function(room){
   state.pendingRoom="A1";
   state.rooms.A1.visited=true;
   resetEncounterUI();
-  removeMissionCompleteBanner();
   encounter.classList.add("show");
   encounterImage.alt=definition.label;
   encounterCard.style.cursor="pointer";
@@ -114,7 +95,9 @@ openEncounter=function(room){
     state.encounterMode="lootFinal";
     setEncounterImage(definition.finalCard);
     itemSound();
-    setTimeout(showMissionCompleteBanner,300);
+
+    /* Permite ver A1F antes de oscurecer la pantalla. */
+    setTimeout(showMissionCompleteScreen,950);
     return;
   }
 
@@ -140,7 +123,6 @@ encounter.addEventListener("click",function(event){
   state.pendingRoom=null;
   state.encounterMode=null;
   resetEncounterUI();
-  removeMissionCompleteBanner();
   refreshRoomMarkers();
 
   showMessage("LA SALA ESTÁ BLOQUEADA<br>ALGUIEN LA ESTÁ BLOQUEANDO DE FORMA REMOTA");
