@@ -59,9 +59,10 @@ button{font-family:inherit}
 #tutorialOverlay,#encounter,#endOverlay{position:fixed;inset:0;align-items:center;justify-content:center;padding:14px}
 #tutorialOverlay{z-index:150;display:none;background:rgba(0,0,0,.62)}
 #tutorialOverlay.show{display:flex}
-#tutorialPanel{width:min(88vw,620px);padding:24px 22px;border-radius:20px;background:rgba(19,22,27,.97);border:3px solid #a8d336;box-shadow:0 0 26px rgba(168,211,54,.35);text-align:center;color:#fff}
+/* Cuadros informativos de la misión: amarillo. */
+#tutorialPanel{width:min(88vw,620px);padding:24px 22px;border-radius:20px;background:rgba(26,22,12,.97);border:3px solid #ffd54a;box-shadow:0 0 26px rgba(255,213,74,.42);text-align:center;color:#fff}
 #tutorialText{font-size:clamp(20px,4vw,31px);font-weight:800;line-height:1.25;margin-bottom:20px}
-#tutorialNext{min-width:150px;padding:11px 22px;border:0;border-radius:14px;background:#a8d336;color:#111;font-size:18px;font-weight:900;cursor:pointer}
+#tutorialNext{min-width:150px;padding:11px 22px;border:0;border-radius:14px;background:#ffd54a;color:#151005;font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 0 12px rgba(255,213,74,.35)}
 
 #encounter{z-index:120;display:flex;background:rgba(0,0,0,.68);opacity:0;visibility:hidden;transform:scale(.96);transition:opacity .18s ease,transform .18s ease}
 #encounter.show{opacity:1;visibility:visible;transform:scale(1)}
@@ -78,7 +79,7 @@ button{font-family:inherit}
 #encounterCard.hit{animation:hit .2s ease}
 @keyframes hit{0%{transform:scale(1)}45%{transform:scale(.985)}100%{transform:scale(1)}}
 
-#message{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.8);z-index:210;min-width:240px;max-width:85vw;padding:17px 25px;border-radius:18px;background:rgba(15,18,22,.96);border:3px solid #a8d336;color:#fff;font-size:clamp(19px,4.3vw,33px);font-weight:900;line-height:1.15;text-align:center;opacity:0;visibility:hidden;box-shadow:0 0 25px rgba(168,211,54,.45);pointer-events:none}
+#message{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.8);z-index:210;min-width:240px;max-width:85vw;padding:17px 25px;border-radius:18px;background:rgba(26,22,12,.97);border:3px solid #ffd54a;color:#fff;font-size:clamp(19px,4.3vw,33px);font-weight:900;line-height:1.15;text-align:center;opacity:0;visibility:hidden;box-shadow:0 0 25px rgba(255,213,74,.48);pointer-events:none}
 #message.show{visibility:visible;animation:msg 1.55s ease forwards}
 @keyframes msg{0%{opacity:0;transform:translate(-50%,-20%) scale(.7)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}72%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-95%) scale(.95)}}
 
@@ -89,6 +90,12 @@ button{font-family:inherit}
 #endSubtitle{margin:0;color:#ddd;font-size:clamp(18px,4vw,28px);font-weight:700;line-height:1.25}
 #endOverlay.gameover #endPanel{border-color:#ff4141;box-shadow:0 0 36px rgba(255,65,65,.4)}
 #endOverlay.gameover #endTitle{color:#ff5959}
+/* Cierre exitoso: pantalla oscura y cuadro amarillo. */
+#endOverlay.missioncomplete{background:rgba(0,0,0,.97)}
+#endOverlay.missioncomplete #endPanel{background:rgba(24,19,8,.96);border-color:#ffd54a;box-shadow:0 0 42px rgba(255,213,74,.5);animation:missionCompleteIn .42s ease both}
+#endOverlay.missioncomplete #endTitle{color:#ffe16b;text-shadow:0 0 18px rgba(255,213,74,.42)}
+#endOverlay.missioncomplete #endSubtitle{color:#fff2b0}
+@keyframes missionCompleteIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 
 @media(max-width:500px){#acceptMissionButton{min-width:145px;padding:11px 20px}#musicButton{width:39px;height:39px;font-size:17px}}
 @media(min-width:900px){#encounterCard{width:min(58vh,610px)}}
